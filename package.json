@@ -1,0 +1,13 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "private": true,
+  "dependencies": {
+    "expo": "^26.0.0",
+    "react": "16.3.0-alpha.1",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-26.0.0.tar.gz",
+    "react-native-material-ui": "^1.22.1"
+  },
+  "scripts": {
+    "postinstall": "rm ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json"
+  }
+}
