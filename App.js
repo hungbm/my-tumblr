@@ -1,4 +1,5 @@
 import React from 'react';
+import { Font } from 'expo';
 import { StyleSheet, Text, View } from 'react-native';
 import Login from './src/Login';
 import { COLOR, ThemeProvider } from 'react-native-material-ui';
@@ -13,6 +14,11 @@ const uiTheme = {
   },
 };
 export default class App extends React.Component {
+  componentDidMount() {
+    Font.loadAsync({
+      'Roboto': require('./assets/Font/Roboto/Roboto-Regular.ttf'),
+    });
+  }
   render() {
     return (
       <ThemeProvider uiTheme={uiTheme}>
