@@ -1,12 +1,20 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, TextInput, Animated, Keyboard } from 'react-native';
 import { Icon, Button } from 'react-native-material-ui';
+import NavigatorService from './services/navigator';
+import {client} from './services/tumblr'
+
 export default class Login extends React.Component {
+    static navigationOptions = {
+        header: null
+    };
     constructor(props) {
         super(props);
         this.state = {
             imageSize: new Animated.Value(0.5),
-            keyboardHeight: 0
+            keyboardHeight: 0,
+            email: '',
+            password: ''
         }
         this._keyboardDidShow = this._keyboardDidShow.bind(this);
         this._keyboardDidHide = this._keyboardDidHide.bind(this);
@@ -23,7 +31,7 @@ export default class Login extends React.Component {
         Animated.timing(                  // Animate over time
             this.state.imageSize,            // The animated value to drive
             {
-                toValue: 1,                   // Animate to opacity: 1 (opaque)
+                toValue: 1,                   // Animate to size: 1
                 duration: 1000,              // Make it take a while
             }
         ).start();                        // Starts the animation
@@ -36,23 +44,24 @@ export default class Login extends React.Component {
 
     render() {
         let imageSize = this.state.imageSize;
-        console.log('this.state.positionOfInput',this.positionOfInput);
-        
+        // console.log('this.state.positionOfInput',this.positionOfInput);
+
         let positionOfInput = this.positionOfInput;
         return (
             <View style={styles.container}>
                 <Animated.Image
-                    style={[styles.logo, { transform: [{ scale: imageSize }, {translateY: Animated.add(0, Animated.multiply(-0.5, positionOfInput))}] }]}
+                    style={[styles.logo, { transform: [{ scale: imageSize }, { translateY: Animated.add(0, Animated.multiply(-0.5, positionOfInput)) }] }]}
                     source={require('../assets/Tumblr.png')}
                 />
                 <Animated.View
-                    style={[styles.inputContainer,{ transform: [{ translateY: Animated.add(0, Animated.multiply(-1, positionOfInput)) }]}]}
+                    style={[styles.inputContainer, { transform: [{ translateY: Animated.add(0, Animated.multiply(-1, positionOfInput)) }] }]}
                 >
                     <TextInput
                         style={styles.textInput}
                         placeholder='Email'
                         placeholderTextColor='grey'
                         underlineColorAndroid='transparent'
+                        onChangeText={(text) => this.setState({email: text})}
 
                     />
                     <TextInput
@@ -61,25 +70,48 @@ export default class Login extends React.Component {
                         placeholderTextColor='grey'
                         underlineColorAndroid='transparent'
                         secureTextEntry={true}
+                        onChangeText={(text) => this.setState({password: text})}                        
                     />
-                    <Button raised style={{container: styles.button, text: {color: '#fff'}}} text="Login" />
+                    <Button
+                        raised
+                        style={{ container: styles.button, text: { color: '#fff' } }}
+                        text="Login"
+                        onPress={this.onLogin.bind(this)}
+                    />
                 </Animated.View>
             </View>
         );
     }
+
+    onLogin() {
+        // if (this.state.email === 'Hung' && this.state.password === 'A') {
+            if (2>1) {
+            client.userInfo(function(err, data) {
+                // console.log('data',data)
+                data.user.blogs.forEach(function(blog) {
+                //   console.log('blog',blog);
+                });
+              });
+            NavigatorService.reset('TabNavigator');
+        } else {
+            alert('Wrong Email or Password!')
+        }
+        
+    }
+
     _keyboardDidShow(e) {
         // this.setState({
         //     keyboardHeight: e.endCoordinates.height
         // })
         this.iconAnimation(true)
         this.keyboardAnimation(true, e.endCoordinates.height)
-        
+
     }
 
     _keyboardDidHide() {
         this.iconAnimation(false)
         this.keyboardAnimation(false)
-        
+
     }
     keyboardAnimation(isFocus, height) {
         if (isFocus) {
@@ -136,7 +168,7 @@ const styles = StyleSheet.create({
         width: '80%',
         minHeight: 32,
         marginBottom: 24
-        
+
     },
     textInput: {
         width: '100%',
