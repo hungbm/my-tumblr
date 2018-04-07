@@ -15,8 +15,8 @@ export default class CardView extends React.Component {
     }
     render() {
         const win = Dimensions.get('window');
-        if (this.state.data.type === 'photo') {
-            const ratio = win.width / this.state.data.photos[0].original_size.width;
+        if (2>1) {
+            const ratio = win.width / this.state.data.thumbnail_width;
             return (
                 <Card>
                     <View style={styles.header}>
@@ -32,10 +32,10 @@ export default class CardView extends React.Component {
                         <Image
                             style={{
                                 flex: 1,
-                                resizeMode: 'contain', width: win.width, height: this.state.data.photos[0].original_size.height * ratio
+                                resizeMode: 'contain', width: win.width, height: this.state.data.thumbnail_height * ratio
                             }}
                             // source={require('../../../assets/test_img.png')}
-                            source={{ uri: this.state.data.photos[0].original_size.url}}
+                            source={{ uri: this.state.data.thumbnail_url}}
                             resizeMode='contain'
                         />
                         <HTML html={this.state.data.summary} imagesMaxWidth={Dimensions.get('window').width} />
@@ -56,7 +56,7 @@ export default class CardView extends React.Component {
                             <TouchableOpacity style={styles.actions}>
                                 <MaterialCommunityIcons name="send" size={24} color='grey' />
                             </TouchableOpacity>
-                            {this.state.data.can_reblog ? <TouchableOpacity style={styles.actions} onPress={() => this._onReblog(this.state.data.blog_name, this.state.data.id, this.state.data.reblog_key, 'this is a  comment')}>
+                            {this.state.data.can_reblog ? <TouchableOpacity style={styles.actions} onPress={() => this._onReblog(this.state.data.blog_name, this.state.data.id, this.state.data.reblog_key, 'this is a fucking comment')}>
                                 <MaterialCommunityIcons name="tumblr-reblog" size={24} color='grey' />
                             </TouchableOpacity> : null}
                             <TouchableOpacity style={styles.actions} onPress={() => this._onLike(this.state.data.id, this.state.data.reblog_key)}>
@@ -85,16 +85,13 @@ export default class CardView extends React.Component {
         const option = {
             id: post_id,
             reblog_key: reblog_key,
-            comment:  comment
+            comment: comment
         }
-        
         client.reblogPost(blog_name + '.tumblr.com', option, function (err, data) {
+            // alert('Reblog successful');
             if (err) {
-            alert('Reblog Failure: '+ post_id + ' '+ reblog_key + ' '+ blog_name);
-            console.log(err)
-            } else {
-                console.log(data)
-            }
+                console.log(err)
+            } else console.log(data)
         });
     }
 }

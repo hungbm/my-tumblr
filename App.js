@@ -1,9 +1,10 @@
 import React from 'react';
-import { Font } from 'expo';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import Expo from 'expo';
+import { StyleSheet, Text, View, Dimensions, StatusBar, Platform } from 'react-native';
 import { StackNavigator, TabNavigator } from 'react-navigation';
 import Login from './src/Login';
 import Dashboard from './src/screen/dashboard/Dashboard';
+import Profile from './src/screen/profile/Profile';
 import NavigatorService from './src/services/navigator';
 import { COLOR, ThemeProvider } from 'react-native-material-ui';
 const uiTheme = {
@@ -17,13 +18,24 @@ const uiTheme = {
   },
 };
 export default class App extends React.Component {
-  componentDidMount() {
-    Font.loadAsync({
+  constructor() {
+    super();
+    this.state = {
+      isReady: false
+    };
+  }
+  async componentDidMount() {
+    await Expo.Font.loadAsync({
       'Roboto': require('./assets/Font/Roboto/Roboto-Regular.ttf'),
       'Roboto-Bold': require('./assets/Font/Roboto/Roboto-Bold.ttf'),
     });
+    this.setState({ isReady: true });
+    StatusBar.setBarStyle('light-content')
   }
   render() {
+    if (!this.state.isReady) {
+      return <Expo.AppLoading />;
+    }
     return (
       <ThemeProvider uiTheme={uiTheme}>
         <RootStack ref={navigatorRef => {
@@ -49,8 +61,8 @@ const RootStack = StackNavigator({
           headerMode: 'screen'
         }
       },
-      Dashboard1: {
-        screen: Dashboard,
+      Profile: {
+        screen: Profile,
         navigationOptions: {
           headerMode: 'screen'
         }
@@ -65,7 +77,8 @@ const RootStack = StackNavigator({
             backgroundColor: 'rgb(46,68,87)',
             // borderTopColor: 'rgb(46,68,87)',
             // borderTopWidth: 1,
-            height: Dimensions.get('window').height * 0.08
+            height: Platform.OS == 'ios' ? 32 : Dimensions.get('window').height * 0.08
+            
           },
           indicatorStyle: {
             backgroundColor: 'transparent',
